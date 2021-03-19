@@ -59,9 +59,6 @@ import {
  * }
  */
 export default function individualAlertFormatter(alert, cpf, token, orgao) {
-  // prettier-ignore
-  console.log(alert.alertCode, orgao,token);
-
   switch (alert.alertCode) {
 
     // ALERTAS DA TUTELA
@@ -223,79 +220,79 @@ function ispsConstructor(alert, orgao, token) {
   };
 }
 
-function dctjConstructor({ dropdown, alertCode, count, docNum, alertId }) {
-  const key = alertId ? alertId : `${alertCode}-dropdown`;
-  let message;
+// function dctjConstructor({ dropdown, alertCode, count, docNum, alertId }) {
+//   const key = alertId ? alertId : `${alertCode}-dropdown`;
+//   let message;
+//
+//   if (dropdown) {
+//     const single = count === 1;
+//     message = (
+//       <span>
+//         Há
+//         <strong> {`${count}`} </strong>
+//         {`${single ? 'procedimento criminal' : 'procedimentos criminais'} no TJRJ há `}
+//         <strong> mais de 60 dias </strong>
+//         sem retorno.
+//       </span>
+//     );
+//   } else {
+//     message = (
+//       <span>
+//         O procedimento criminal
+//         <strong>{`${docNum}`}</strong>
+//         está há
+//         <strong> mais de 60 dias </strong>
+//         no TJRJ sem retorno
+//       </span>
+//     );
+//   }
+//
+//   return {
+//     actions: [DETAIL(), DELETE],
+//     backgroundColor: '#F86C72',
+//     backgroundColorChild: '#D94F55',
+//     icon: <Tjrj />,
+//     key,
+//     message,
+//   };
+// }
 
-  if (dropdown) {
-    const single = count === 1;
-    message = (
-      <span>
-        Há
-        <strong> {`${count}`} </strong>
-        {`${single ? 'procedimento criminal' : 'procedimentos criminais'} no TJRJ há `}
-        <strong> mais de 60 dias </strong>
-        sem retorno.
-      </span>
-    );
-  } else {
-    message = (
-      <span>
-        O procedimento criminal
-        <strong>{`${docNum}`}</strong>
-        está há
-        <strong> mais de 60 dias </strong>
-        no TJRJ sem retorno
-      </span>
-    );
-  }
-
-  return {
-    actions: [DETAIL(), DELETE],
-    backgroundColor: '#F86C72',
-    backgroundColorChild: '#D94F55',
-    icon: <Tjrj />,
-    key,
-    message,
-  };
-}
-
-function dntjConstructor({ dropdown, alertCode, count, docNum, alertId }) {
-  const key = alertId ? alertId : `${alertCode}-dropdown`;
-  let message;
-
-  if (dropdown) {
-    const single = count === 1;
-    message = (
-      <span>
-        Há
-        <strong>{` ${count} `}</strong>
-        {`${single ? 'procedimento não criminal' : 'procedimentos não criminais'} no TJRJ há `}
-        <strong> há mais de 120 dias </strong>
-        sem retorno.
-      </span>
-    );
-  } else {
-    message = (
-      <span>
-        O procedimento criminal
-        <strong>{`${docNum}`}</strong>
-        está há
-        <strong> mais de 120 dias </strong>
-        no TJRJ sem retorno
-      </span>
-    );
-  }
-
-  return {
-    actions: [DETAIL(), DELETE],
-    backgroundColor: '#F86C72',
-    backgroundColorChild: '#D94F55',
-    icon: <Tjrj />,
-    key,
-    message,
-  };
-}
+// function dntjConstructor({ dropdown, alertCode, count, docNum, alertId }) {
+//   const key = alertId ? alertId : `${alertCode}-dropdown`;
+//   let message;
+//
+//   if (dropdown) {
+//     const single = count === 1;
+//     message = (
+//       <span>
+//         Há
+//         <strong>{` ${count} `}</strong>
+//         {`${single ? 'procedimento não criminal' : 'procedimentos não criminais'} no TJRJ há `}
+//         <strong> há mais de 120 dias </strong>
+//         sem retorno.
+//       </span>
+//     );
+//   } else {
+//     message = (
+//       <span>
+//         O procedimento criminal
+//         <strong>{`${docNum}`}</strong>
+//         está há
+//         <strong> mais de 120 dias </strong>
+//         no TJRJ sem retorno
+//       </span>
+//     );
+//   }
+//
+//   return {
+//     actions: [DETAIL(), DELETE],
+//     backgroundColor: '#F86C72',
+//     backgroundColorChild: '#D94F55',
+//     icon: <Tjrj />,
+//     key,
+//     message,
+//   };
+// }
 
 function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
@@ -468,6 +465,7 @@ function nf30Constructor({ dropdown, alertCode, count, docNum, date, alertId }, 
 function offpConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -480,6 +478,7 @@ function offpConstructor({ dropdown, alertCode, count, docNum, alertId }) {
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE],
     message = (
       <span>
         O ofício
@@ -490,7 +489,7 @@ function offpConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <ClockIcon />,
@@ -778,6 +777,7 @@ function gateConstructor(alert) {
 function dt2iConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -789,6 +789,7 @@ function dt2iConstructor({ dropdown, alertCode, count, docNum, alertId }) {
       </span>
     );
   } else {
+    let actions = [DETAIL(), DELETE];
     message = (
       <span>
         O procedimento
@@ -800,7 +801,7 @@ function dt2iConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#5C6FD9',
     backgroundColorChild: '#7956A7',
     icon: <Home />,
@@ -815,6 +816,7 @@ function roOccurrence(alert, token) {
   const unsentOcurrences = daysPassed;
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -826,6 +828,7 @@ function roOccurrence(alert, token) {
     );
   } else {
     const single = unsentOcurrences === 1;
+    action = [DOWNLOAD_LIST(UNSENT_OCCURRENCE_LIST({ dpNumber, token })), DETAIL(), DELETE];
     message = (
       <span>
         <strong>{` ${unsentOcurrences} ${single ? 'registro' : 'registros'} `}</strong>
@@ -835,7 +838,7 @@ function roOccurrence(alert, token) {
   }
 
   return {
-    actions: [DOWNLOAD_LIST(UNSENT_OCCURRENCE_LIST({ dpNumber, token })), DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F8BD6C',
     backgroundColorChild: '#D69F53',
     icon: <Ro />,
@@ -847,6 +850,7 @@ function roOccurrence(alert, token) {
 function ctacConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -858,6 +862,7 @@ function ctacConstructor({ dropdown, alertCode, count, docNum, alertId }) {
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         <strong>{`Você celebrou ${count} ${single ? 'tac' : 'tacs'} `}</strong>
@@ -868,7 +873,7 @@ function ctacConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <Clock />,
@@ -970,6 +975,7 @@ function abr1Constructor({ dropdown, alertCode, docNum, alertId }, orgao, cpf, t
       </span>
     );
     return {
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <ClockIcon />,
@@ -998,6 +1004,7 @@ function abr1Constructor({ dropdown, alertCode, docNum, alertId }, orgao, cpf, t
 function bdpaConstructor({ dropdown, alertCode, count, docNum, hierarchy, alertId }) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -1008,6 +1015,7 @@ function bdpaConstructor({ dropdown, alertCode, count, docNum, hierarchy, alertI
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         <strong>{`O procedimento ${docNum}`}</strong>
@@ -1016,7 +1024,7 @@ function bdpaConstructor({ dropdown, alertCode, count, docNum, hierarchy, alertI
     );
   }
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <ClockIcon />,
@@ -1029,6 +1037,7 @@ function febtConstructor(alert) {
   const { dropdown, alertId, alertCode, count, hierarchy } = alert;
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
     const single = count === 1;
@@ -1038,6 +1047,7 @@ function febtConstructor(alert) {
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         Estamos há mais de 30 dias sem receber novos registros de ocorrência da {hierarchy}.
@@ -1045,7 +1055,7 @@ function febtConstructor(alert) {
     );
   }
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F8BD6C',
     backgroundColorChild: '#D69F53',
     icon: <FebtIcon />,
