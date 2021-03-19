@@ -28,6 +28,7 @@ import {
   UNSENT_OCCURRENCE_LIST,
   ABR1_ALERT_ACTION,
   LINK_ACTION_OUVIDORIA,
+  PROCESSES_LIST_GENERATE_DOC,
 } from '../../../../api/endpoints';
 
 import {
@@ -43,6 +44,7 @@ import {
   GENERATE_MINUTA,
   EXTEND_DEADLINE,
   DOWNLOAD_LIST,
+  GENERATE_CSV,
 } from './actionConstants';
 
 /**
@@ -58,7 +60,10 @@ import {
  */
 export default function individualAlertFormatter(alert, cpf, token, orgao) {
   // prettier-ignore
+  console.log(alert.alertCode, orgao,token);
+
   switch (alert.alertCode) {
+
     // ALERTAS DA TUTELA
     case 'DCTJ':
     return dctjConstructor(alert);
@@ -67,7 +72,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
     return dntjConstructor(alert);
 
     case 'MVVD':
-    return mvvdConstructor(alert);
+    return mvvdConstructor(alert, orgao, cpf, token);
 
     case 'PA1A':
     return pa1aConstructor(alert);
@@ -82,23 +87,24 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
     return ic1aConstructor(alert, cpf, token);
 
     case 'NF30':
-      return nf30Constructor(alert);
+      return nf30Constructor(alert, orgao, cpf, token);
 
     case 'OFFP':
     return offpConstructor(alert);
 
     case 'OUVI':
-    return ouviConstructor(alert);
+    return ouviConstructor(alert, orgao, token);
 
     case 'VADF':
-    return vadfConstructor(alert);
+    return vadfConstructor(alert, orgao, cpf, token);
 
     case 'BDPA':
     return bdpaConstructor(alert);
 
     // ALERTAS DE COMPRAS
     case 'COMP':
-      return compConstructor(alert, orgao, token);
+
+      return compConstructor(alert, orgao, cpf, token);
 
     case 'ISPS':
       return ispsConstructor(alert, orgao, token);
@@ -107,7 +113,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
       return roOccurrence(alert, token);
 
     case 'ABR1':
-      return abr1Constructor(alert,cpf, token);
+      return abr1Constructor(alert,orgao, cpf, token);
 
     // ALERTAS DE PRESCRIÇÃO
     case 'PRCR':
@@ -115,7 +121,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
     case 'PRCR2':
     case 'PRCR3':
     case 'PRCR4':
-      return prcrConstructor(alert, cpf, token);
+      return prcrConstructor(alert, orgao, cpf, token);
 
     // ALERTAS DA PIP
     case 'GATE':
@@ -135,14 +141,14 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
   }
 }
 
-function compConstructor(alert, orgao, token) {
+function compConstructor(alert, orgao, cpf, token) {
   const { contrato_iditem, contrato, item, iditem, dropdown, alertCode, count, alertId } = alert;
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
   let actions;
 
   if (dropdown) {
-    actions = [];
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC(orgao, alertCode, token ))];
     const single = count === 1;
     message = (
       <span>
@@ -184,7 +190,7 @@ function ispsConstructor(alert, orgao, token) {
   let actions;
 
   if (dropdown) {
-    actions = [];
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC(orgao, alertCode, token ))];
     const single = count === 1;
     message = (
       <span>
@@ -291,11 +297,13 @@ function dntjConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   };
 }
 
-function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }) {
+function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions;
 
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
     message = (
       <span>
@@ -308,6 +316,7 @@ function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }) {
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         O procedimento {``}
@@ -321,7 +330,7 @@ function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <IconVd />,
@@ -410,11 +419,13 @@ function ic1aConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, ale
   };
 }
 
-function nf30Constructor({ dropdown, alertCode, count, docNum, date, alertId }) {
+function nf30Constructor({ dropdown, alertCode, count, docNum, date, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
 
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
     message = (
       <span>
@@ -427,6 +438,7 @@ function nf30Constructor({ dropdown, alertCode, count, docNum, date, alertId }) 
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         A notícia de fato autuada há mais de 120 dias
@@ -438,7 +450,7 @@ function nf30Constructor({ dropdown, alertCode, count, docNum, date, alertId }) 
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <ClockIcon />,
@@ -481,7 +493,7 @@ function offpConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   };
 }
 
-function ouviConstructor(alert) {
+function ouviConstructor(alert, orgao, token) {
   const { dropdown, alertCode, count, docNum, alertId } = alert;
 
   const key = alertId ? alertId : `${alertCode}-dropdown`;
@@ -490,6 +502,7 @@ function ouviConstructor(alert) {
 
   if (dropdown) {
     const single = count === 1;
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token}))];
     message = (
       <span>
         <strong>{`Há ${count} ${single ? 'expediente' : 'expedientes'} de Ouvidoria `}</strong>
@@ -519,11 +532,14 @@ function ouviConstructor(alert) {
   };
 }
 
-function vadfConstructor({ dropdown, alertCode, count, docNum, alertId }) {
+function vadfConstructor({ dropdown, alertCode, count, docNum, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions = [];
+
 
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
     message = (
       <span>
@@ -536,6 +552,7 @@ function vadfConstructor({ dropdown, alertCode, count, docNum, alertId }) {
       </span>
     );
   } else {
+    actions = [DETAIL(), DELETE];
     message = (
       <span>
         Você possui
@@ -548,7 +565,7 @@ function vadfConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   }
 
   return {
-    actions: [DETAIL(), DELETE],
+    actions,
     backgroundColor: '#28A7E0',
     backgroundColorChild: '#1D78A2',
     icon: <Va />,
@@ -557,13 +574,14 @@ function vadfConstructor({ dropdown, alertCode, count, docNum, alertId }) {
   };
 }
 
-function prcrConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, alertId }, cpf, token) {
+function prcrConstructor({ dropdown, alertCode, count, docNum, docDk, alertId }, orgao, cpf, token) {
+
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
   let actions;
 
   if (dropdown) {
-    actions = [];
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
 
     switch (alertCode) {
@@ -934,11 +952,12 @@ function ppfpConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, ale
   };
 }
 
-function abr1Constructor({ dropdown, alertCode, docNum, orgao, alertId }, cpf, token) {
+function abr1Constructor({ dropdown, alertCode, docNum, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
   let actions = [];
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     message = (
       <span>
        Você está no mês de comunicação de procedimentos com mais de 1 ano de tramitação ao CSMP.
