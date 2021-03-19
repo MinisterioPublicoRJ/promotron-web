@@ -75,7 +75,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
     return mvvdConstructor(alert, orgao, cpf, token);
 
     case 'PA1A':
-    return pa1aConstructor(alert);
+    return pa1aConstructor(alert, orgao, cpf, token);
 
     case 'PPFP':
     return ppfpConstructor(alert, cpf, token);
@@ -84,7 +84,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
       return pppvConstructor(alert,cpf, token);
 
     case 'IC1A':
-    return ic1aConstructor(alert, cpf, token);
+    return ic1aConstructor(alert, orgao, cpf, token);
 
     case 'NF30':
       return nf30Constructor(alert, orgao, cpf, token);
@@ -113,7 +113,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
       return roOccurrence(alert, token);
 
     case 'ABR1':
-      return abr1Constructor(alert,orgao, cpf, token);
+      return abr1Constructor(alert, orgao, cpf, token);
 
     // ALERTAS DE PRESCRIÇÃO
     case 'PRCR':
@@ -339,11 +339,13 @@ function mvvdConstructor({ dropdown, alertCode, count, docNum, alertId }, orgao,
   };
 }
 
-function pa1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId }) {
+function pa1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions;
 
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
     message = (
       <span>
@@ -356,6 +358,7 @@ function pa1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId })
       </span>
     );
   } else {
+    actions = [GENERATE_DOC(), CALCULO(), DELETE];
     message = (
       <span>
         O procedimento administrativo {``}
@@ -367,7 +370,7 @@ function pa1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId })
   }
 
   return {
-    actions: [GENERATE_DOC(), CALCULO(), DELETE],
+    actions,
     backgroundColor: '#5C6FD9',
     backgroundColorChild: '#7956A7',
     icon: <ClockIcon />,
@@ -377,11 +380,13 @@ function pa1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId })
   };
 }
 
-function ic1aConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, alertId }, cpf, token) {
+function ic1aConstructor({ dropdown, alertCode, count, docNum, docDk, alertId }, orgao, cpf, token) {
   const key = alertId ? alertId : `${alertCode}-dropdown`;
   let message;
+  let actions;
 
   if (dropdown) {
+    actions = [GENERATE_CSV(PROCESSES_LIST_GENERATE_DOC({orgao, alertCode, token }))];
     const single = count === 1;
     message = (
       <span>
@@ -394,6 +399,11 @@ function ic1aConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, ale
       </span>
     );
   } else {
+    actions =  [
+      GENERATE_DOC(IC1A_ACTION_GENERATE_DOC({ orgao, cpf, docDk, token })),
+      CALCULO(),
+      DELETE,
+    ];
     message = (
       <span>
         O inquérito civil
@@ -405,11 +415,7 @@ function ic1aConstructor({ dropdown, alertCode, count, docNum, orgao, docDk, ale
   }
 
   return {
-    actions: [
-      GENERATE_DOC(IC1A_ACTION_GENERATE_DOC({ orgao, cpf, docDk, token })),
-      CALCULO(),
-      DELETE,
-    ],
+    actions,
     backgroundColor: '#F86C72',
     backgroundColorChild: '#D94F55',
     icon: <ClockIcon />,
