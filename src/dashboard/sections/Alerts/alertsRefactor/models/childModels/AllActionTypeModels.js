@@ -1,6 +1,10 @@
 /* eslint max-classes-per-file: off */
 
 import ActionModel from '../mainModels/ActionModel';
+import {
+  LINK_ACTION_OPEN_OUVIDORIA,
+  LINK_ACTION_PAINEL_COMPRAS,
+} from '../../../../../../api/endpoints';
 
 //
 // DELETE ACTIONS
@@ -15,8 +19,8 @@ export class ACTION_DELETE extends ActionModel {
 // LINK ACTIONS
 //
 export class ACTION_PAINEL_COMPRAS extends ActionModel {
-  // link: `https://tableau2020.mprj.mp.br/t/MPMAPAS/views/TESTE-COVID-19GATE/CONUnidadeGestora?:isGuestRedirectFromVizportal=y&:embed=y&:linktarget=_self&:tabs=no&:tollbar=yes&contrato_iditem=${compId}&CONTRATACAO=${contrato}`,
-  constructor(link) {
+  constructor(contrato, idItem) {
+    const link = LINK_ACTION_PAINEL_COMPRAS({ contrato, idItem });
     super('link', 'Painel de Compras', '#F8BD6C', link);
   }
 }
@@ -67,7 +71,8 @@ export class ACTION_EXTEND_DEADLINE extends ActionModel {
 // COMPLAINT ACTIONS
 //
 export class ACTION_OPEN_OUVIDORIA extends ActionModel {
-  constructor(link) {
+  constructor(orgao, token, alertID, alertCode) {
+    const link = LINK_ACTION_OPEN_OUVIDORIA({ orgao, token, alertID, alertCode });
     super('openComplaint', 'Ouvidoria', '#5C6FD9', link);
   }
 }

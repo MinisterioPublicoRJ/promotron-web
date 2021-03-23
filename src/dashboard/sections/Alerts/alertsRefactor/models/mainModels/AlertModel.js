@@ -1,11 +1,12 @@
 /* eslint camelcase: off */
 
 export default class AlertModel {
-  constructor(id, code, backgroundColor, actions, overlayContent) {
-    this.actions = actions;
+  constructor({ alrt_key, sigla }, backgroundColor, actions, message, overlayContent) {
+    this.id = alrt_key || `${sigla}-dropdownHeader`;
+    this.code = sigla;
     this.backgroundColor = backgroundColor;
-    this.code = code;
-    this.id = id;
+    this.actions = actions;
+    this.message = message;
     this.overlayContent = overlayContent;
   }
 }

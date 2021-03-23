@@ -69,9 +69,7 @@ export const PRCR_ACTION_GENERATE_DOC = t(
 export const COMPRAS_ACTION_OUVIDORIA = t(
   `${BASE_URL}/alertas/ouvidoria/\${orgao}/\${alertCode}/\${alertId}?jwt=\${token}`,
 );
-export const LINK_ACTION_OUVIDORIA = t(
-  `${BASE_URL}/alertas/ouvidoria/\${orgao}/\${alertCode}/\${alertId}?jwt=\${token}`,
-);
+
 export const ABR1_ALERT_ACTION = t(
   `${BASE_URL}/documentos/procedimentos-csmp/\${orgao}/\${cpf}?jwt=\${token}`,
 );
@@ -95,4 +93,13 @@ export const PPPV_ACTION_CONVERT = t(
 );
 export const UNSENT_OCCURRENCE_LIST = t(
   `${BASE_URL}/documentos/ros-ausentes/\${dpNumber}?jwt=\${token}`,
+);
+
+// Already refactored
+export const LINK_ACTION_OPEN_OUVIDORIA = t(
+  `${BASE_URL}/alertas/ouvidoria/\${orgao}/\${alertCode}/\${alertID}?jwt=\${token}`,
+);
+
+export const LINK_ACTION_PAINEL_COMPRAS = t(
+  `https://tableau2020.mprj.mp.br/t/MPMAPAS/views/TESTE-COVID-19GATE/CONUnidadeGestora?:isGuestRedirectFromVizportal=y&:embed=y&:linktarget=_self&:tabs=no&:tollbar=yes&contrato_iditem=\${idItem}&CONTRATACAO=\${contrato}`,
 );
