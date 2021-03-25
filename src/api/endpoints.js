@@ -94,6 +94,10 @@ export const PPPV_ACTION_CONVERT = t(
 export const UNSENT_OCCURRENCE_LIST = t(
   `${BASE_URL}/documentos/ros-ausentes/\${dpNumber}?jwt=\${token}`,
 );
+export const PROCESSES_LIST_GENERATE_DOC = t(
+  `${BASE_URL}/alertas/baixar/\${orgao}?tipo_alerta=\${alertCode}&jwt=\${token}`,
+);
+
 
 // Already refactored
 export const LINK_ACTION_OPEN_OUVIDORIA = t(
