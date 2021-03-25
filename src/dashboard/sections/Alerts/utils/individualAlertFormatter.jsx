@@ -27,8 +27,8 @@ import {
   PPPV_ACTION_CONVERT,
   UNSENT_OCCURRENCE_LIST,
   ABR1_ALERT_ACTION,
-  LINK_ACTION_OUVIDORIA,
   PROCESSES_LIST_GENERATE_DOC,
+  LINK_ACTION_OPEN_OUVIDORIA,
 } from '../../../../api/endpoints';
 
 import {
@@ -126,7 +126,7 @@ export default function individualAlertFormatter(alert, cpf, token, orgao) {
     case 'PRCR2':
     //procedimentos ao menos um crime possivelmente prescrito
     case 'PRCR3':
-    //procedimentos um crime prescreverá < 90 dias 
+    //procedimentos um crime prescreverá < 90 dias
     case 'PRCR4':
       return prcrConstructor(alert, orgao, cpf, token);
 
@@ -167,7 +167,7 @@ function compConstructor(alert, orgao, cpf, token) {
     );
   } else {
     actions = [
-      OUVIDORIA_COMPRAS(LINK_ACTION_OUVIDORIA({ alertId, alertCode, orgao, token })),
+      OUVIDORIA_COMPRAS(LINK_ACTION_OPEN_OUVIDORIA({ alertId, alertCode, orgao, token })),
       COMPRAS({ compId: contrato_iditem, contrato }),
       DELETE,
     ];
@@ -209,7 +209,7 @@ function ispsConstructor(alert, orgao, cpf, token) {
     );
   } else {
     actions = [
-      OUVIDORIA_ISPS(LINK_ACTION_OUVIDORIA({ alertId, alertCode, orgao, token })),
+      OUVIDORIA_ISPS(LINK_ACTION_OPEN_OUVIDORIA({ alertId, alertCode, orgao, token })),
       SANEAMENTO(),
       DELETE,
     ];

@@ -67,6 +67,13 @@ export class ACTION_EXTEND_DEADLINE extends ActionModel {
   }
 }
 
+export class ACTION_GENERATE_CSV extends ActionModel {
+  // add endpoint!
+  constructor(link) {
+    super('download', 'CSV', '', link);
+  }
+}
+
 //
 // COMPLAINT ACTIONS
 //

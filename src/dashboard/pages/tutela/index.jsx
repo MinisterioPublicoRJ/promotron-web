@@ -5,13 +5,16 @@ import '../styles.css';
 import './styles.css';
 
 import {
-  Alerts,
+  // Alerts,
   PerformanceRadar,
   Today,
   ProcessingTime,
   YourDesk,
   TablesTutela,
 } from '../../sections';
+
+import AlertsControler from '../../sections/Alerts/alertsRefactor/controler/Alerts.controler';
+import AlertsView from '../../sections/Alerts/alertsRefactor/view/Alerts.view';
 
 const propTypes = {
   setIsSelectorOpen: PropTypes.func.isRequired,
@@ -37,7 +40,7 @@ function Tutela({
       />
       <YourDesk />
       <PerformanceRadar setModalType={setModalType} setModalData={setModalData} />
-      <Alerts />
+      <AlertsControler AlertsView={AlertsView} />
       <ProcessingTime />
       <TablesTutela setInvestigatedProfile={setInvestigatedProfile} />
     </div>

@@ -7,12 +7,15 @@ import '../styles.css';
 import {
   Today,
   YourDesk,
-  Alerts,
+  // Alerts,
   PerformanceRadar,
   MainInvestigated,
   SuccessIndicators,
   ProcessingTime,
 } from '../../sections';
+
+import AlertsControler from '../../sections/Alerts/alertsRefactor/controler/Alerts.controler';
+import AlertsView from '../../sections/Alerts/alertsRefactor/view/Alerts.view';
 
 const propTypes = {
   setIsSelectorOpen: PropTypes.func.isRequired,
@@ -38,7 +41,7 @@ function Pip({
         setIsIntroOpen={setIsIntroOpen}
       />
       <YourDesk />
-      <Alerts />
+      <AlertsControler AlertsView={AlertsView} />
       <PerformanceRadar setModalType={setModalType} setModalData={setModalData} />
       <MainInvestigated setInvestigatedProfile={setInvestigatedProfile} />
       <SuccessIndicators />
