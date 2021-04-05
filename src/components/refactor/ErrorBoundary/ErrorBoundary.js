@@ -8,7 +8,10 @@ export default class ErrorBoundary extends React.Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, hasCrashed, errorScreen } = this.props;
+    if(hasCrashed) {
+      return errorScreen;
+    }
     return children;
   }
 }
